@@ -10,7 +10,7 @@ const settings = {
 const sketch = ({ context, width, height }) => {
   const agents = [];
 
-  for (let i = 0; i < 30; i++) {
+  for (let i = 0; i < 50; i++) {
     const x = random.range(0, width);
     const y = random.range(0, height);
 
@@ -31,11 +31,11 @@ const sketch = ({ context, width, height }) => {
 
         if (dist > 400) continue;
 
-        context.lineWidth = math.mapRange(dist, 0, 400, 12, 1);
+        context.lineWidth = math.mapRange(dist, 0, 400, 8, 1);
         context.beginPath();
         context.moveTo(agent.pos.x, agent.pos.y);
         context.lineTo(other.pos.x, other.pos.y);
-        context.strokeStyle = "cyan";
+        context.strokeStyle = "lime";
         context.stroke();
       }
     }
@@ -43,7 +43,7 @@ const sketch = ({ context, width, height }) => {
     agents.forEach(agent =>{
       agent.update();
       agent.draw(context);
-      agent.bounce(width, height);
+      agent.wrap(width, height);
     });    
 
   };
@@ -75,6 +75,13 @@ class Agent {
     if (this.pos.x <= 0 || this.pos.x >= width) this.vel.x *= -1;
     if (this.pos.y <= 0 || this.pos.y >= height) this.vel.y *= -1;
   };
+
+  wrap(width, height){
+    if (this.pos.x <= 0) this.pos.x = width;
+    if (this.pos.x > width) this.pos.x = 0;
+    if (this.pos.y <= 0) this.pos.y = height;
+    if (this.pos.y > height) this.pos.y = 0;
+  }
 
   update() {
     this.pos.x += this.vel.x;
